@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Kronic do
-  def self.should_parse(string, date)
+  def self.should_parse(string, date, options={})
     it "should parse '#{string}'" do
-      Kronic.parse(string).should == date
+      Kronic.parse(string, options).should == date
     end
   end
 
@@ -52,6 +52,7 @@ describe Kronic do
   should_parse('14',          nil)
   should_parse('14 bogus in', nil)
   should_parse('14 June oen', nil)
+  should_parse('today', date(:today) + 1, {:today => date(:today) + 1})
 
   should_format('Today',       date(:today))
   should_format('Yesterday',   date(:today) - 1)

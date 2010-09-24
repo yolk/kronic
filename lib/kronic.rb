@@ -11,9 +11,9 @@ class Kronic
   #          Sep 14, 14 June 2010. Parsing is case-insensitive.
   #
   # Returns the Date, or nil if the input could not be parsed.
-  def self.parse(string)
+  def self.parse(string, options={})
     string = string.to_s.downcase.strip
-    today  = Date.today
+    today  = options[:today] || Date.today
 
     parse_nearby_days(string, today) ||
       parse_last_or_this_day(string, today) ||
