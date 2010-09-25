@@ -23,7 +23,7 @@ describe Kronic do
   before :all do 
     Timecop.freeze(date(:today))
   end
-  
+
   after :all do 
     Timecop.return
   end
@@ -52,7 +52,7 @@ describe Kronic do
   should_parse('14 bogus in', nil)
   should_parse('14 June oen', nil)
   should_parse('today', date(:today) + 1, {:today => date(:today) + 1})
-  
+
   context "in german" do
     should_parse('Heute',           date(:today),           :locale => "de")
     should_parse('morgen',          date(:today) + 1,       :locale => :de)

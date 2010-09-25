@@ -47,27 +47,27 @@ class Kronic
   # you should update it to change the translations.
   TRANSLATIONS = {
     :en => {
-      :this        => 'This',
-      :tomorrow    => 'Tomorrow',
-      :today       => 'Today',
-      :yesterday   => 'Yesterday',
-      :last        => 'Last',
-      :months      => Date::MONTHNAMES,
-      :months_abbr => Date::ABBR_MONTHNAMES,
-      :days        => Date::DAYNAMES,
-      :days_abbr   => Date::ABBR_DAYNAMES,
+      :this        => 'this',
+      :tomorrow    => 'tomorrow',
+      :today       => 'today',
+      :yesterday   => 'yesterday',
+      :last        => 'last',
+      :months      => Date::MONTHNAMES.map{|m| m ? m.downcase : m},
+      :months_abbr => Date::ABBR_MONTHNAMES.map{|m| m ? m.downcase : m},
+      :days        => Date::DAYNAMES.map(&:downcase),
+      :days_abbr   => Date::ABBR_DAYNAMES.map(&:downcase),
       :number_with_ordinal => /^[0-9]+(st|nd|rd|th)?$/
     },
     :de => {
-      :this        => 'Diesen',
-      :tomorrow    => 'Morgen',
-      :today       => 'Heute',
-      :yesterday   => 'Gestern',
-      :last        => 'Letzten',
-      :months      => [nil] + %w(Januar Februar März April Mai Juni Juli August September Oktober November Dezember),
-      :months_abbr => [nil] + %w(Jan Feb Mrz Apr Mai Jun Jul Aug Sep Okt Nov Dez),
-      :days        => %w(Sonntag Montag Dienstag Mittwoch Donnerstag Freitag Samstag),
-      :days_abbr   => %w(So Mo Di Mi Do Fr Sa),
+      :this        => 'diesen',
+      :tomorrow    => 'morgen',
+      :today       => 'heute',
+      :yesterday   => 'gestern',
+      :last        => 'letzten',
+      :months      => [nil] + %w(januar februar märz april mai juni juli august september oktober november dezember),
+      :months_abbr => [nil] + %w(jan feb mrz apr mai jun jul aug sep okt nov dez),
+      :days        => %w(sonntag montag dienstag mittwoch donnerstag freitag samstag),
+      :days_abbr   => %w(so mo di mi do fr sa),
       :number_with_ordinal => /^[0-9]+(\.|er|ter)?$/
     }
   }
@@ -87,20 +87,20 @@ class Kronic
 
   # Parse "Today", "Tomorrow" and "Yesterday"
   def parse_nearby_days(string)
-    return today     if string == t[:today    ].downcase
-    return today - 1 if string == t[:yesterday].downcase
-    return today + 1 if string == t[:tomorrow ].downcase
+    return today     if string == t[:today]
+    return today - 1 if string == t[:yesterday]
+    return today + 1 if string == t[:tomorrow ]
   end
 
   # Parse "Last Monday", "This Monday"
   def parse_last_or_this_day(string)
     tokens = string.split(/\s+/)
 
-    if [t[:last].downcase, t[:this].downcase].include?(tokens[0])
+    if [t[:last], t[:this]].include?(tokens[0])
       days = (1..7).map {|x| 
-        today + (tokens[0] == t[:last].downcase ? -x : x)
+        today + (tokens[0] == t[:last] ? -x : x)
       }.inject({}) {|a, x| 
-        a.update(t[:days][x.wday].downcase => x) 
+        a.update(t[:days][x.wday] => x) 
       }
       days[tokens[1]]
     end
