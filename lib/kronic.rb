@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 require 'date'
 
 class Kronic
@@ -30,7 +29,7 @@ class Kronic
     string = string.to_s.downcase.strip
 
     parse_nearby_days(string) ||
-    parse_last_or_this_day(string) ||
+    parse_last_next_or_this_day(string) ||
     parse_exact_date(string)
   end
   
@@ -51,6 +50,7 @@ class Kronic
       :tomorrow    => 'tomorrow',
       :yesterday   => 'yesterday',
       :this        => 'this',
+      :next        => 'next',
       :last        => 'last',
       :months      => Date::MONTHNAMES.map{|m| m ? m.downcase : m},
       :months_abbr => Date::ABBR_MONTHNAMES.map{|m| m ? m.downcase : m},
@@ -63,12 +63,14 @@ class Kronic
       :tomorrow    => 'morgen',
       :yesterday   => 'gestern',
       :this        => /diese(n|r)/,
+      :next        => /nächste(n|r)/,
       :last        => /letzte(r|n)/,
       :months      => [nil] + %w(januar februar märz april mai juni juli august september oktober november dezember),
       :months_abbr => [nil] + %w(jan feb mrz apr mai jun jul aug sep okt nov dez),
       :days        => %w(sonntag montag dienstag mittwoch donnerstag freitag samstag),
       :days_abbr   => %w(so mo di mi do fr sa),
-      :number_with_ordinal => /^[0-9]+(\.|er|ter)?$/
+      :number_with_ordinal => /^[0-9]+(\.|er|ter)?$/,
+      :week_starts_at_monday => true
     }
   }
 
@@ -81,6 +83,14 @@ class Kronic
   def month_from_name(month)
     t[:months].index(month) || t[:months_abbr].index(month)
   end
+  
+  # Examples
+  #
+  #   day_from_name("monday") # => 1
+  #   day_from_name("sun")    # => 0
+  def day_from_name(day)
+    t[:days].index(day) || t[:days_abbr].index(day)
+  end
 
   # Parse "Today", "Tomorrow" and "Yesterday"
   def parse_nearby_days(string)
@@ -91,15 +101,23 @@ class Kronic
     end
   end
 
-  # Parse "Last Monday", "This Monday"
-  def parse_last_or_this_day(string)
+  # Parse "Last Monday", "This Monday", "Next Monday"
+  def parse_last_next_or_this_day(string)
     tokens  = string.split(/\s+/)
+    wday = day_from_name(tokens[1])
+    return nil unless wday
+    
     is_last = t[:last] === tokens[0]
-    is_next = t[:this] === tokens[0]
-
+    is_next = t[:next] === tokens[0]
+    is_this = t[:this] === tokens[0]
+    
     if is_last || is_next
-      wday = t[:days].index(tokens[1]) || t[:days_abbr].index(tokens[1])
-      today - (today.wday - wday) + ((is_last ? 0 : 7) - (today.wday == 0 ? 7 : 0)) if wday
+      date = today - (today.wday - wday) 
+      date += 7 if is_next
+      date -= 7 if today.wday == 0
+      date
+    elsif is_this
+      today + (wday - today.wday) + (wday == 0 && t[:week_starts_at_monday] ? 7 : 0)
     end
   end
 

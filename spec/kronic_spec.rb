@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe Kronic do
@@ -6,16 +7,24 @@ describe Kronic do
       Kronic.parse(string, options).should == date
     end
   end
+  
+  def self.should_translate(string, string_en, locale)
+    it "should parse '#{string}' same as '#{string_en}'" do
+      Kronic.parse(string, {:locale => locale}).should == Kronic.parse(string_en)
+    end
+  end
 
   def self.date(key)
     {
-      :today       => Date.new(2010, 9, 19),
-      :last_monday => Date.new(2010, 9, 13),
-      :this_monday => Date.new(2010, 9, 20),
-      :sep_4       => Date.new(2010, 9, 4),
-      :sep_20      => Date.new(2010, 9, 20),
-      :sep_28      => Date.new(2010, 9, 28),
-      :jan_28      => Date.new(2010, 1, 28)
+      :today          => Date.new(2010, 9, 18),
+      :last_monday    => Date.new(2010, 9, 13),
+      :next_monday    => Date.new(2010, 9, 20),
+      :this_monday    => Date.new(2010, 9, 13),
+      :this_sunday    => Date.new(2010, 9, 12),
+      :sep_4          => Date.new(2010, 9, 4),
+      :sep_20         => Date.new(2010, 9, 20),
+      :sep_28         => Date.new(2010, 9, 28),
+      :jan_28         => Date.new(2010, 1, 28)
     }.fetch(key)
   end
   def date(key); self.class.date(key); end;
@@ -35,9 +44,10 @@ describe Kronic do
   should_parse('Yesterday',         date(:today) - 1)
   should_parse('Tomorrow',          date(:today) + 1)
   should_parse('Last Monday',       date(:last_monday))
-  should_parse('last Mon',          date(:last_monday))
+  should_parse('Next Monday',       date(:next_monday))
   should_parse('This Monday',       date(:this_monday))
-  should_parse('This Mon',          date(:this_monday))
+  should_parse('This Sunday',       date(:this_sunday))
+  should_parse('last Mon',          date(:last_monday))
   should_parse('4 Sep',             date(:sep_4))
   should_parse('4  Sep',            date(:sep_4))
   should_parse('4 September',       date(:sep_4))
@@ -56,20 +66,19 @@ describe Kronic do
   should_parse('today',             date(:today) + 1, {:today => date(:today) + 1})
 
   context "in german" do
-    should_parse('Heute',           date(:today),           :locale => "de")
-    should_parse('morgen',          date(:today) + 1,       :locale => :de)
-    should_parse('gestern',         date(:today) - 1,       :locale => :de)
-    should_parse('28 Januar',       date(:jan_28),          :locale => :de)
-    should_parse('1 Mrz 2010',      Date.new(2010, 3, 1),   :locale => :de)
-    should_parse('1 Mrz 2008',      Date.new(2008, 3, 1),   :locale => :de)
-    should_parse('28. Januar',      date(:jan_28),          :locale => :de)
-    should_parse('28er Januar',     date(:jan_28),          :locale => :de)
-    should_parse('2ter Mrz',        Date.new(2010, 3, 2),   :locale => :de)
-    should_parse('Letzten Montag',  date(:last_monday),     :locale => :de)
-    should_parse('Letzter Montag',  date(:last_monday),     :locale => :de)
-    should_parse('diesen Montag',   date(:this_monday),     :locale => :de)
-    should_parse('dieser Montag',   date(:this_monday),     :locale => :de)
-    should_parse('Letzten Mo',     date(:last_monday),     :locale => :de)
-    should_parse('diesen Mo',      date(:this_monday),     :locale => :de)
+    should_translate('Heute',               "today",        "de")
+    should_translate('morgen',              "tomorrow",     :de)
+    should_translate('gestern',             "yesterday",    :de)
+    should_translate('28 Januar',           "28 Jan",       :de)
+    should_translate('1 Mai 2010',          "1 May 2010",   :de)
+    should_translate('1 Mai 2008',          "1 May 2008",   :de)
+    should_translate('28. Januar',          "28 Jan",       :de)
+    should_translate('28er Januar',         "28 Jan",       :de)
+    should_translate('2ter Mai',            "2 May",        :de)
+    should_translate('Letzten Montag',      "last monday",  :de)
+    should_translate('nächsten Montag',     "next monday",  :de)
+    should_translate('diesen Montag',       "this monday",  :de)
+    should_translate('Letzter Mo',          "last monday",  :de)
+    should_parse('diesen sonntag',             date(:this_sunday) + 7, :locale => :de) # week starts at monday
   end
 end
