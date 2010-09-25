@@ -84,9 +84,11 @@ class Kronic
 
   # Parse "Today", "Tomorrow" and "Yesterday"
   def parse_nearby_days(string)
-    return today     if string == t[:today]
-    return today - 1 if string == t[:yesterday]
-    return today + 1 if string == t[:tomorrow ]
+    case string
+    when t[:today]; today
+    when t[:yesterday]; today - 1
+    when t[:tomorrow]; today + 1
+    end
   end
 
   # Parse "Last Monday", "This Monday"
