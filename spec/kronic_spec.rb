@@ -64,6 +64,8 @@ describe Kronic do
     should_parse('28er Januar',     date(:jan_28),          :locale => :de)
     should_parse('2ter Mrz',        Date.new(2010, 3, 2),   :locale => :de)
     should_parse('Letzten Montag',  date(:last_monday),     :locale => :de)
+    should_parse('Letzter Montag',  date(:last_monday),     :locale => :de)
     should_parse('diesen Montag',   date(:next_monday),     :locale => :de)
+    should_parse('dieser Montag',   date(:next_monday),     :locale => :de)
   end
 end

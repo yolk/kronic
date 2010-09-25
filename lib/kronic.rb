@@ -59,11 +59,11 @@ class Kronic
       :number_with_ordinal => /^[0-9]+(st|nd|rd|th)?$/
     },
     :de => {
-      :this        => 'diesen',
+      :this        => /diese(n|r)/,
       :tomorrow    => 'morgen',
       :today       => 'heute',
       :yesterday   => 'gestern',
-      :last        => 'letzten',
+      :last        => /letzte(r|n)/,
       :months      => [nil] + %w(januar februar märz april mai juni juli august september oktober november dezember),
       :months_abbr => [nil] + %w(jan feb mrz apr mai jun jul aug sep okt nov dez),
       :days        => %w(sonntag montag dienstag mittwoch donnerstag freitag samstag),
@@ -94,8 +94,8 @@ class Kronic
   # Parse "Last Monday", "This Monday"
   def parse_last_or_this_day(string)
     tokens  = string.split(/\s+/)
-    is_last = tokens[0] == t[:last]
-    is_next = tokens[0] == t[:this]
+    is_last = t[:last] === tokens[0]
+    is_next = t[:this] === tokens[0]
 
     if is_last || is_next
       wday = t[:days].index(tokens[1])
