@@ -126,10 +126,6 @@ class Kronic
       today.year
     end
 
-    return nil unless day && month && year
-
-    result = Date.new(year, month, day)
-    result = result << 12 if result > today && !raw_year
-    result
+    year && month && day ? Date.new(year, month, day) : nil
   end
 end

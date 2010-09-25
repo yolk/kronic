@@ -11,9 +11,9 @@ describe Kronic do
     {
       :today       => Date.new(2010, 9, 18),
       :last_monday => Date.new(2010, 9, 13),
-      :next_monday => Date.new(2010, 9, 20),
+      :this_monday => Date.new(2010, 9, 20),
       :sep_4       => Date.new(2010, 9, 4),
-      :sep_20      => Date.new(2009, 9, 20),
+      :sep_20      => Date.new(2010, 9, 20),
       :sep_28      => Date.new(2010, 9, 28),
       :jan_28      => Date.new(2010, 1, 28)
     }.fetch(key)
@@ -35,9 +35,9 @@ describe Kronic do
   should_parse('Yesterday',   date(:today) - 1)
   should_parse('Tomorrow',    date(:today) + 1)
   should_parse('Last Monday', date(:last_monday))
-  should_parse('This Monday', date(:next_monday))
-  should_parse('This Mon',    date(:next_monday))
   should_parse('last Mon',    date(:last_monday))
+  should_parse('This Monday', date(:this_monday))
+  should_parse('This Mon',    date(:this_monday))
   should_parse('4 Sep',       date(:sep_4))
   should_parse('4  Sep',      date(:sep_4))
   should_parse('4 September', date(:sep_4))
@@ -67,9 +67,9 @@ describe Kronic do
     should_parse('2ter Mrz',        Date.new(2010, 3, 2),   :locale => :de)
     should_parse('Letzten Montag',  date(:last_monday),     :locale => :de)
     should_parse('Letzter Montag',  date(:last_monday),     :locale => :de)
-    should_parse('diesen Montag',   date(:next_monday),     :locale => :de)
-    should_parse('dieser Montag',   date(:next_monday),     :locale => :de)
+    should_parse('diesen Montag',   date(:this_monday),     :locale => :de)
+    should_parse('dieser Montag',   date(:this_monday),     :locale => :de)
     should_parse('Letzten Mo',     date(:last_monday),     :locale => :de)
-    should_parse('diesen Mo',      date(:next_monday),     :locale => :de)
+    should_parse('diesen Mo',      date(:this_monday),     :locale => :de)
   end
 end
