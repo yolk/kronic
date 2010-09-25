@@ -103,13 +103,13 @@ class Kronic
 
   # Parse "Last Monday", "This Monday", "Next Monday"
   def parse_last_next_or_this_day(string)
-    tokens  = string.split(/\s+/)
-    wday = day_from_name(tokens[1])
+    tokens = string.split(/\s+/)
+    wday = day_from_name(tokens[1] || tokens[0])
     return nil unless wday
     
     is_last = t[:last] === tokens[0]
     is_next = t[:next] === tokens[0]
-    is_this = t[:this] === tokens[0]
+    is_this = !tokens[1] || t[:this] === tokens[0]
     
     if is_last || is_next
       date = today - (today.wday - wday) 

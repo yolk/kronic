@@ -47,6 +47,8 @@ describe Kronic do
   should_parse('Next Monday',       date(:next_monday))
   should_parse('This Monday',       date(:this_monday))
   should_parse('This Sunday',       date(:this_sunday))
+  should_parse('Sunday',            date(:this_sunday))
+  should_parse('Mon',               date(:this_monday))
   should_parse('last Mon',          date(:last_monday))
   should_parse('last Sat',          date(:today) - 7)
   should_parse('next Sat',          date(:today) + 7)
