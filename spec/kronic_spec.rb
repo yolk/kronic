@@ -84,6 +84,8 @@ describe Kronic do
     should_translate('nächsten Montag',     "next monday",  :de)
     should_translate('diesen Montag',       "this monday",  :de)
     should_translate('Letzter Mo',          "last monday",  :de)
-    should_parse('diesen sonntag',             date(:this_sunday) + 7, :locale => :de) # week starts at monday
+    should_parse('diesen sonntag',          date(:this_sunday) + 7, :locale => :de) # week starts at monday
+    should_parse('übermorgen',              date(:today) + 2,       :locale => :de)
+    should_parse('vorgestern',              date(:today) - 2,       :locale => :de)
   end
 end

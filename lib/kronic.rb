@@ -69,8 +69,10 @@ class Kronic
       :months_abbr => [nil] + %w(jan feb mrz apr mai jun jul aug sep okt nov dez),
       :days        => %w(sonntag montag dienstag mittwoch donnerstag freitag samstag),
       :days_abbr   => %w(so mo di mi do fr sa),
-      :number_with_ordinal => /^[0-9]+(\.|er|ter)?$/,
-      :week_starts_at_monday => true
+      :number_with_ordinal    => /^[0-9]+(\.|er|ter)?$/,
+      :day_after_tomorrow     => "übermorgen",
+      :day_before_yesterday   => "vorgestern",
+      :week_starts_at_monday  => true
     }
   }
 
@@ -98,6 +100,8 @@ class Kronic
     when t[:today]; today
     when t[:yesterday]; today - 1
     when t[:tomorrow]; today + 1
+    when t[:day_after_tomorrow]; today + 2
+    when t[:day_before_yesterday]; today - 2
     end
   end
 
