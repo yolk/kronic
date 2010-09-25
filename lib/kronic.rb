@@ -93,15 +93,13 @@ class Kronic
 
   # Parse "Last Monday", "This Monday"
   def parse_last_or_this_day(string)
-    tokens = string.split(/\s+/)
+    tokens  = string.split(/\s+/)
+    is_last = tokens[0] == t[:last]
+    is_next = tokens[0] == t[:this]
 
-    if [t[:last], t[:this]].include?(tokens[0])
-      days = (1..7).map {|x| 
-        today + (tokens[0] == t[:last] ? -x : x)
-      }.inject({}) {|a, x| 
-        a.update(t[:days][x.wday] => x) 
-      }
-      days[tokens[1]]
+    if is_last || is_next
+      wday = t[:days].index(tokens[1])
+      today - (today.wday - wday) + (is_last ? 0 : 7) if wday
     end
   end
 
