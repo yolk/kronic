@@ -7,12 +7,6 @@ describe Kronic do
     end
   end
 
-  def self.should_format(string, date, options={})
-    it "should format '#{string}'" do
-      Kronic.format(date, options).should == string
-    end
-  end
-
   def self.date(key)
     {
       :today       => Date.new(2010, 9, 18),
@@ -28,6 +22,10 @@ describe Kronic do
 
   before :all do 
     Timecop.freeze(date(:today))
+  end
+  
+  after :all do 
+    Timecop.return
   end
 
   should_parse('Today',       date(:today))
@@ -54,13 +52,6 @@ describe Kronic do
   should_parse('14 bogus in', nil)
   should_parse('14 June oen', nil)
   should_parse('today', date(:today) + 1, {:today => date(:today) + 1})
-
-  should_format('Today',       date(:today))
-  should_format('Yesterday',   date(:today) - 1)
-  should_format('Tomorrow',    date(:today) + 1)
-  should_format('Last Monday', date(:last_monday))
-  should_format('This Monday', date(:next_monday))
-  should_format('14 September 2008', Date.new(2008, 9, 14))
   
   context "in german" do
     should_parse('Heute',           date(:today),           :locale => "de")
@@ -74,12 +65,5 @@ describe Kronic do
     should_parse('2ter Mrz',        Date.new(2010, 3, 2),   :locale => :de)
     should_parse('Letzten Montag',  date(:last_monday),     :locale => :de)
     should_parse('diesen Montag',   date(:next_monday),     :locale => :de)
-    
-    should_format('Heute',            date(:today),         :locale => :de)
-    should_format('Gestern',          date(:today) - 1,     :locale => :de)
-    should_format('Morgen',           date(:today) + 1,     :locale => :de)
-    should_format('Letzten Montag',   date(:last_monday),   :locale => :de)
-    should_format('Diesen Montag',    date(:next_monday),  :locale => :de)
-    should_format('14 September 2008',Date.new(2008, 9, 14),   :locale => :de)
   end
 end

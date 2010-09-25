@@ -33,30 +33,9 @@ class Kronic
     parse_last_or_this_day(string) ||
     parse_exact_date(string)
   end
-
-  # Public: Converts a date to a human readable string.
-  #
-  # date - The Date to be converted
-  #
-  # Returns a relative string ("Today", "This Monday") if available, otherwise
-  # the full representation of the date ("19 September 2010").
-  def format(date)
-    case (date - today).to_i
-      when (2..7)   then t[:this] + " " + t[:days][date.wday]
-      when 1        then t[:tomorrow]
-      when 0        then t[:today]
-      when -1       then t[:yesterday]
-      when (-7..-2) then t[:last] + " " + t[:days][date.wday]
-      else              date.strftime("%e %B %Y").strip
-    end
-  end
   
   def self.parse(string, options={})
     new(options).parse(string)
-  end
-  
-  def self.format(date, options={})
-    new(options).format(date)
   end
   
   private
