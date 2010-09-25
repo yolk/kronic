@@ -79,10 +79,7 @@ class Kronic
   #   month_from_name("january") # => 1
   #   month_from_name("jan")     # => 1
   def month_from_name(month)
-    f = lambda {|months| months.compact.map {|x| x.downcase }.index(month) }
-
-    month = f[t[:months]] || f[t[:months_abbr]]
-    month ? month + 1 : nil
+    t[:months].index(month) || t[:months_abbr].index(month)
   end
 
   # Parse "Today", "Tomorrow" and "Yesterday"
