@@ -99,7 +99,7 @@ class Kronic
 
     if is_last || is_next
       wday = t[:days].index(tokens[1]) || t[:days_abbr].index(tokens[1])
-      today - (today.wday - wday) + (is_last ? 0 : 7) if wday
+      today - (today.wday - wday) + ((is_last ? 0 : 7) - (today.wday == 0 ? 7 : 0)) if wday
     end
   end
 
