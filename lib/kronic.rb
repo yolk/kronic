@@ -30,7 +30,8 @@ class Kronic
 
     parse_nearby_days(string) ||
     parse_last_next_or_this_day(string) ||
-    parse_exact_date(string)
+    parse_exact_date(string) ||
+    parse_standard_date(string)
   end
   
   def self.parse(string, options={})
@@ -76,7 +77,9 @@ class Kronic
     }
   }
 
-  NUMBER              = /^[0-9]+$/
+  NUMBER            = /^[0-9]+$/
+  DATES             = /^[\d]{1,4}(\/|\.)[\d]{1,2}(\/|\.)[\d]{1,4}$/
+  DATE_WITHOUT_YEAR = /^[\d]{1,2}(\/|\.)[\d]{1,2}$/
 
   # Examples
   #
@@ -149,5 +152,17 @@ class Kronic
     end
 
     year && month && day ? Date.new(year, month, day) : nil
+  end
+  
+  # Parse standard date format with rubys Date-class
+  def parse_standard_date(string)
+    tokens = string.match(DATE_WITHOUT_YEAR)
+    if tokens
+      string = tokens[1] == "/" ? "#{today.year}/#{string}" : "#{string}.#{today.year}"
+    end
+    
+    if string =~ DATES
+      Date.parse(string) rescue nil
+    end
   end
 end

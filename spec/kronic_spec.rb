@@ -64,10 +64,16 @@ describe Kronic do
   should_parse('September 14 2008', Date.new(2008, 9, 14))
   should_parse('Sep 4th',           date(:sep_4))
   should_parse('September 4',       date(:sep_4))
+  should_parse('2010/9/4',          date(:sep_4))
+  should_parse('4.9.2010',          date(:sep_4))
+  should_parse('4.9',               date(:sep_4))
+  should_parse('9/4',               date(:sep_4))
   should_parse('bogus',             nil)
   should_parse('14',                nil)
   should_parse('14 bogus in',       nil)
   should_parse('14 June oen',       nil)
+  should_parse('1/1 oen',           nil)
+  should_parse('1/1/2010 oen',      nil)
   should_parse('today',             date(:today) + 1, {:today => date(:today) + 1})
 
   context "in german" do
