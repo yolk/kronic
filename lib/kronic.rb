@@ -114,7 +114,7 @@ class Kronic
     if is_last || is_next
       date = today - (today.wday - wday) 
       date += 7 if is_next
-      date -= 7 if today.wday == 0
+      date -= 7 if today.wday == 0 || (is_last && today.wday == wday)
       date
     elsif is_this
       today + (wday - today.wday) + (wday == 0 && t[:week_starts_at_monday] ? 7 : 0)
