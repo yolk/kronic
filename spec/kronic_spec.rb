@@ -7,9 +7,9 @@ describe Kronic do
     end
   end
 
-  def self.should_format(string, date)
+  def self.should_format(string, date, options={})
     it "should format '#{string}'" do
-      Kronic.format(date).should == string
+      Kronic.format(date, options).should == string
     end
   end
 
@@ -18,9 +18,10 @@ describe Kronic do
       :today       => Date.new(2010, 9, 18),
       :last_monday => Date.new(2010, 9, 13),
       :next_monday => Date.new(2010, 9, 20),
-      :sep_4  => Date.new(2010, 9, 4),
-      :sep_20 => Date.new(2009, 9, 20),
-      :sep_28 => Date.new(2010, 9, 28)
+      :sep_4       => Date.new(2010, 9, 4),
+      :sep_20      => Date.new(2009, 9, 20),
+      :sep_28      => Date.new(2010, 9, 28),
+      :jan_28      => Date.new(2010, 1, 28)
     }.fetch(key)
   end
   def date(key); self.class.date(key); end;
@@ -60,15 +61,25 @@ describe Kronic do
   should_format('Last Monday', date(:last_monday))
   should_format('This Monday', date(:next_monday))
   should_format('14 September 2008', Date.new(2008, 9, 14))
-
-  it 'should support i18n when parsing' do
-    Kronic.parse('T').should == nil
-    Kronic.translations.update(:today => 'T')
-    Kronic.parse('T').should == date(:today)
-  end
-
-  it 'should support i18n when formatting' do
-     Kronic.translations.update(:today => 'T')
-    Kronic.format(Date.today).should == 'T'
+  
+  context "in german" do
+    should_parse('Heute',           date(:today),           :locale => "de")
+    should_parse('morgen',          date(:today) + 1,       :locale => :de)
+    should_parse('gestern',         date(:today) - 1,       :locale => :de)
+    should_parse('28 Januar',       date(:jan_28),          :locale => :de)
+    should_parse('1 Mrz 2010',      Date.new(2010, 3, 1),   :locale => :de)
+    should_parse('1 Mrz 2008',      Date.new(2008, 3, 1),   :locale => :de)
+    should_parse('28. Januar',      date(:jan_28),          :locale => :de)
+    should_parse('28er Januar',     date(:jan_28),          :locale => :de)
+    should_parse('2ter Mrz',        Date.new(2010, 3, 2),   :locale => :de)
+    should_parse('Letzten Montag',  date(:last_monday),     :locale => :de)
+    should_parse('diesen Montag',   date(:next_monday),     :locale => :de)
+    
+    should_format('Heute',            date(:today),         :locale => :de)
+    should_format('Gestern',          date(:today) - 1,     :locale => :de)
+    should_format('Morgen',           date(:today) + 1,     :locale => :de)
+    should_format('Letzten Montag',   date(:last_monday),   :locale => :de)
+    should_format('Diesen Montag',    date(:next_monday),  :locale => :de)
+    should_format('14 September 2008',Date.new(2008, 9, 14),   :locale => :de)
   end
 end
