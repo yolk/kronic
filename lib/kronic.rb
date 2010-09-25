@@ -47,10 +47,10 @@ class Kronic
   # you should update it to change the translations.
   TRANSLATIONS = {
     :en => {
-      :this        => 'this',
-      :tomorrow    => 'tomorrow',
       :today       => 'today',
+      :tomorrow    => 'tomorrow',
       :yesterday   => 'yesterday',
+      :this        => 'this',
       :last        => 'last',
       :months      => Date::MONTHNAMES.map{|m| m ? m.downcase : m},
       :months_abbr => Date::ABBR_MONTHNAMES.map{|m| m ? m.downcase : m},
@@ -59,10 +59,10 @@ class Kronic
       :number_with_ordinal => /^[0-9]+(st|nd|rd|th)?$/
     },
     :de => {
-      :this        => /diese(n|r)/,
-      :tomorrow    => 'morgen',
       :today       => 'heute',
+      :tomorrow    => 'morgen',
       :yesterday   => 'gestern',
+      :this        => /diese(n|r)/,
       :last        => /letzte(r|n)/,
       :months      => [nil] + %w(januar februar märz april mai juni juli august september oktober november dezember),
       :months_abbr => [nil] + %w(jan feb mrz apr mai jun jul aug sep okt nov dez),
