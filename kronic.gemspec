@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
   s.authors     = ["Xavier Shay"]
   s.email       = ["hello@xaviershay.com"]
   s.homepage    = "http://github.com/xaviershay/kronic"
-  s.has_rdoc = false
 
   s.files        = Dir.glob("{spec,lib}/**/*") + %w(README.rdoc HISTORY Rakefile)
   s.require_path = 'lib'
