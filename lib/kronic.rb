@@ -78,8 +78,8 @@ class Kronic
   }
 
   NUMBER            = /^[0-9]+$/
-  DATES             = /^[\d]{1,4}(\/|\.)[\d]{1,2}(\/|\.)[\d]{1,4}$/
-  DATE_WITHOUT_YEAR = /^[\d]{1,2}(\/|\.)[\d]{1,2}$/
+  DATES             = /^([\d]{1,4})(\/|\.)([\d]{1,2})(\/|\.)([\d]{1,4})$/
+  DATE_WITHOUT_YEAR = /^([\d]{1,2})(\/|\.)([\d]{1,2})(\/|\.)?$/
 
   # Examples
   #
@@ -156,13 +156,19 @@ class Kronic
   
   # Parse standard date format with rubys Date-class
   def parse_standard_date(string)
-    tokens = string.match(DATE_WITHOUT_YEAR)
-    if tokens
-      string = tokens[1] == "/" ? "#{today.year}/#{string}" : "#{string}.#{today.year}"
+    if parts = string.match(DATE_WITHOUT_YEAR)
+      string = "#{parts[1]}.#{parts[3]}.#{today.year}"
     end
     
-    if string =~ DATES
-      Date.parse(string) rescue nil
+    if parts = string.match(DATES)
+      if parts[1].size <= 2 && parts[5].size <= 2
+        string = "#{parts[5]}.#{parts[3]}.#{parts[1]}"
+      end
+      begin
+        Date.parse(string)
+      rescue ArgumentError
+        nil
+      end
     end
   end
 end
