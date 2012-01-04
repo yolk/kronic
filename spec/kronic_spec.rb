@@ -85,6 +85,15 @@ describe Kronic do
   should_parse('4.9.112',           date(:sep_4_112))
   should_parse('112.9.4',           date(:sep_4_112))
   
+  should_parse('2010-9-4',          date(:sep_4))
+  should_parse('4-9-2010',          date(:sep_4))
+  should_parse('4-9',               date(:sep_4))
+  should_parse('4-9-',              date(:sep_4))
+  should_parse('4-9-10',            date(:sep_4))
+  should_parse('4-9-99',            date(:sep_4_1999))
+  should_parse('4-9-112',           date(:sep_4_112))
+  should_parse('112-9-4',           date(:sep_4_112))
+  
   should_parse('bogus',             nil)
   should_parse('14',                nil)
   should_parse('14 bogus in',       nil)
